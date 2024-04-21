@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { imageUpload } from "../util/ImageUpload";
 import { useCreateProductMutation } from "../features/apiSlice";
 
 const CreateProduct = () => {
-  const [createProduct] = useCreateProductMutation()
+  const [createProduct] = useCreateProductMutation();
   const {
     register,
     handleSubmit,
@@ -12,29 +12,33 @@ const CreateProduct = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = async (data) =>{
-    const imageURL = await imageUpload(data?.image);
+  const [file, setFile] = useState(null);
+  const onSubmit = async (data) => {
+    const imageURL = await imageUpload(file[0]);
+
     const payload = {
-      id : data?.id,
+      id: data?.id,
       title: data?.title,
       images: imageURL,
-      category : data?.category,
+      category: data?.category,
+      price: data?.price,
       description: data?.description,
-      brand : data?.brand,
-      rating : data?.rating,
-      stock : data?.stock,
-
+      brand: data?.brand,
+      rating: data?.rating,
+      stock: data?.stock,
     };
-    console.log(payload)
+    console.log(payload);
 
     try {
+      if (imageURL) {
         const result = await createProduct(payload).unwrap();
         console.log("Product created:", result);
-        reset();
-      } catch (error) {
-        console.error("Failed to create product:", error);
       }
+      reset();
+    } catch (error) {
+      console.error("Failed to create product:", error);
     }
+  };
   return (
     <div>
       <h2 className="text-2xl font-bold text-center my-4">Create Product</h2>
@@ -76,7 +80,7 @@ const CreateProduct = () => {
               className="border-2 py-1 px-2 rounded-lg w-full"
               placeholder="Enter product image..."
               type="file"
-              {...register("image")}
+              onChange={(e) => setFile(e.target.files)}
             />
           </div>
           <div className="w-1/2">
