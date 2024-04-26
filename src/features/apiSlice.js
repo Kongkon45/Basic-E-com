@@ -8,7 +8,7 @@ export const productsApi = createApi({
             query: () => "products"
         }),
         getProduct: builder.query({
-            // query: (id) => `products/search?q=${id}`
+            // query: (_id) => `products/search?q=${_id}`
             query: (id) => `products/${id}`
         }),
         createProduct: builder.mutation({
@@ -18,7 +18,20 @@ export const productsApi = createApi({
                 body: newProduct
             }),
         }),
+        updateProduct: builder.mutation({
+            query: ({ id, updatedProduct }) => ({
+                url: `products/${id}`,
+                method: "PUT",
+                body: updatedProduct
+            }),
+        }),
+        deleteProduct: builder.mutation({
+            query: (_id) => ({
+                url: `products/${_id}`,
+                method: "DELETE"
+            }),
+        }),
     }),
 });
 
-export const { useGetAllProductsQuery, useGetProductQuery, useCreateProductMutation } = productsApi;
+export const { useGetAllProductsQuery, useGetProductQuery, useCreateProductMutation , useUpdateProductMutation, useDeleteProductMutation } = productsApi;

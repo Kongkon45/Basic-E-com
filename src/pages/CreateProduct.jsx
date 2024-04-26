@@ -13,6 +13,7 @@ const CreateProduct = () => {
   } = useForm();
 
   const [file, setFile] = useState(null);
+  // console.log(file[0])
   const onSubmit = async (data) => {
     const imageURL = await imageUpload(file[0]);
 

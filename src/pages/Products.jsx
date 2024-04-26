@@ -46,9 +46,10 @@ const Products = () => {
               />
               <div className="text-center font-bold my-2 p-3">
                 <h1 className="text-xl">Name : {product.title}</h1>
+                <p>{product._id}</p>
                 <p>Price : ${product.price}</p>
                 <p>Rating : {product.rating}</p>
-                <Link to={`/products/${product.id}`}>
+                <Link to={`/products/${product._id}`}>
                   <button className="bg-blue-500 text-white py-1 px-4 rounded-lg text-xl font-bold my-4">
                     View Product
                   </button>

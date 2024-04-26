@@ -1,11 +1,15 @@
 import React from 'react'
-import { useParams } from 'react-router-dom'
-import { useGetProductQuery } from '../features/apiSlice';
+import { useNavigate, useParams } from 'react-router-dom'
+import { useDeleteProductMutation, useGetProductQuery } from '../features/apiSlice';
 
 const ProductDetails = () => {
-    const {id} = useParams();
+    const navigate = useNavigate();
+    const {_id} = useParams();
+    // console.log(_id)
     // const {data, isLoading, error} = useGetProductQuery(id);
-    const { data, isLoading, error } = useGetProductQuery(parseInt(id));
+    const { data, isLoading, error } = useGetProductQuery(_id);
+    const [deleteProduct] = useDeleteProductMutation(_id);
+    // console.log(deleteProduct)
 
     // console.log(id)
     // console.log(data?.data)
@@ -21,10 +25,20 @@ const ProductDetails = () => {
     // console.log(singleProduct)
 
     const singleProduct = data?.data;
-    console.log(singleProduct)
+    // console.log(singleProduct)
 
     if(!singleProduct){
         return <p className='flex h-screen justify-center items-center'>Product Not Found</p>
+    }
+
+
+    const handleDeleteProduct = async (_id)=>{
+        try {
+            await deleteProduct(_id);
+            navigate("/products")
+        } catch (error) {
+            console.log(error)
+        }
     }
   return (
     <div className='h-screen flex justify-center items-center gap-10 mx-10'>
@@ -40,6 +54,7 @@ const ProductDetails = () => {
             <p className='text-md font-semibold'><span className='text-2xl font-bold '>Rating : </span>{singleProduct.rating}</p>
             <p className='text-md font-semibold'><span className='text-2xl font-bold '>Stock : </span>{singleProduct.stock}</p>
             <button className='bg-blue-500 text-white py-1 px-4 rounded-lg text-xl font-bold my-4'>Add To Cart</button>
+            <button onClick={()=>handleDeleteProduct(_id)} className='bg-red-500 text-white py-1 px-4 rounded-lg text-xl font-bold my-4 ml-6'>Delete</button>
         </div> 
 
     </div>
