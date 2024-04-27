@@ -1,5 +1,5 @@
 import React from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useDeleteProductMutation, useGetProductQuery } from '../features/apiSlice';
 
 const ProductDetails = () => {
@@ -25,13 +25,14 @@ const ProductDetails = () => {
     // console.log(singleProduct)
 
     const singleProduct = data?.data;
+    const {id, images, title, description, price, rating, brand, stock, category} = singleProduct;
     // console.log(singleProduct)
 
     if(!singleProduct){
         return <p className='flex h-screen justify-center items-center'>Product Not Found</p>
     }
 
-
+    // delete product 
     const handleDeleteProduct = async (_id)=>{
         try {
             await deleteProduct(_id);
@@ -40,6 +41,8 @@ const ProductDetails = () => {
             console.log(error)
         }
     }
+    
+
   return (
     <div className='h-screen flex justify-center items-center gap-10 mx-10'>
         <div className='w-1/2'>
@@ -55,6 +58,9 @@ const ProductDetails = () => {
             <p className='text-md font-semibold'><span className='text-2xl font-bold '>Stock : </span>{singleProduct.stock}</p>
             <button className='bg-blue-500 text-white py-1 px-4 rounded-lg text-xl font-bold my-4'>Add To Cart</button>
             <button onClick={()=>handleDeleteProduct(_id)} className='bg-red-500 text-white py-1 px-4 rounded-lg text-xl font-bold my-4 ml-6'>Delete</button>
+            <Link to={`/editProduct/${_id}`} state={{id, title, price, images, description, brand, rating, stock, category}}>
+            <button className='bg-orange-500 text-white py-1 px-4 rounded-lg text-xl font-bold my-4 ml-6'>Update</button>
+            </Link>
         </div> 
 
     </div>

@@ -9,6 +9,7 @@ const Navbar = () => {
             <Link className='text-white text-2xl font-bold' to='/about'>About</Link>
             <Link className='text-white text-2xl font-bold' to='/products'>Products</Link>
             <Link className='text-white text-2xl font-bold' to='/createProduct'>CreateProduct</Link>
+            <Link className='text-white text-2xl font-bold' to="/editProduct">EditProduct</Link>
         </nav>
     </div>
   )

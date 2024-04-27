@@ -1,6 +1,64 @@
-import React from 'react';
-
+import React, { useState } from 'react';
+import { useForm } from "react-hook-form";
+import { imageUpload } from '../util/ImageUpload';
+import { useUpdateProductMutation } from '../features/apiSlice';
+import { useLocation, useParams } from 'react-router-dom';
 const EditProduct = () => {
+  const location = useLocation();
+  // console.log(location)
+  const {_id} = useParams();
+  // console.log(_id)
+  const [updateProduct] = useUpdateProductMutation(_id);
+  console.log(updateProduct)
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      id: location.state.id,
+      title: location.state.title,
+      category: location.state.category,
+      description: location.state.description,
+      price: location.state.price,
+      rating: location.state.rating,
+      brand: location.state.brand,
+      stock: location.state.stock,
+      images : location.state.images
+    }
+  });
+
+  const [file, setFile] = useState(null);
+
+  const onSubmit = async (data) => {
+    const imageURL = await imageUpload(file[0]);
+
+    const payload = {
+      id: data?.id,
+      title: data?.title,
+      images: imageURL,
+      category: data?.category,
+      price: data?.price,
+      description: data?.description,
+      brand: data?.brand,
+      rating: data?.rating,
+      stock: data?.stock,
+    };
+    // console.log(payload);
+
+    try {
+      if (imageURL) {
+        const result = await updateProduct(payload).unwrap();
+        console.log("Product updated:", result);
+      }
+      // const result = await updateProduct(payload).unwrap();
+      // console.log("Product updated:", result);
+      reset();
+    } catch (error) {
+      console.error("Failed to update product:", error);
+    }
+  };
     return (
         <div>
         <h2 className="text-2xl font-bold text-center my-4">Edit Product</h2>
@@ -125,7 +183,7 @@ const EditProduct = () => {
             <input
               className="bg-blue-500 hover:bg-blue-600 text-white font-bold text-xl py-1 px-4 rounded-lg cursor-pointer transition ease-in-out duration-300"
               type="submit"
-              value="Create Product"
+              value="Update Product"
             />
           </div>
         </form>
